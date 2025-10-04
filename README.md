@@ -1,11 +1,15 @@
 
 ## OBJECTIFS 
 
-* Installer et configurer l'environnement NS-3
-* Comprendre les protocoles UDP et TCP
-* Maîtriser le routage IP et la gestion de congestion
-* Analyser les performances réseau
+L’objectif de ce TP est de se familiariser avec NS-3, un simulateur réseau utilisé pour étudier le comportement de différents protocoles réseau dans des topologies variées. Les points principaux abordés sont :
 
+Communication UDP et TCP
+
+Routage IP
+
+Gestion de congestion et des files d’attente
+
+Analyse des performances réseau avec FlowMonitor et Wireshark
 ---
 
 ## INSTALLATION ET CONFIGURATION
@@ -35,11 +39,27 @@ cd ~/Documents/ns-allinone-3.45/ns-3.45
 ```
 
 ### ÉTAPE 4: Test de l'installation
+Lien point-à-point entre deux nœuds.
+n0 -------- n1
+   10.1.1.0
+Deux nœuds (NodeContainer) reliés par un lien point-à-point (PointToPointHelper).
+Chaque nœud a une interface réseau avec une IP attribuée dans le réseau 10.1.1.0/24.
+Simuler une communication UDP simple entre deux nœuds : n0 envoie un message à n1.
+Visualiser le fonctionnement de NS-3, l’installation des piles réseau, et la configuration d’un client/serveur UDP.
 
 ```bash
 ./ns3 run first
 ./ns3 run first.py
 ```
+<p align="center">
+  <img src="./images/firstcc.png" alt="Ma photo" width="400"/>
+</p>
+<p align="center">
+  <img src="./images/firstpy.png" alt="Ma photo" width="400"/>
+</p>
+
+
+Objectif : apprendre à configurer des nœuds, des interfaces IP et une communication UDP simple.
 
 ## PARTIE B: SIMULATIONS RÉSEAU
 
