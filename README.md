@@ -98,7 +98,6 @@ Deux nœuds (NodeContainer) reliés par un lien point-à-point (PointToPointHelp
 ```
 ![Description de l'image](./images/firstcc.png)
 ![Description de l'image](./images/firstpy.png)
-![Description de l'image](./images/Capture d’écran du 2025-10-04 16-07-00.png)
 
 ---
 
