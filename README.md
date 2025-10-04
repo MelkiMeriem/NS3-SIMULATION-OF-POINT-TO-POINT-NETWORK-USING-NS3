@@ -15,6 +15,14 @@
 * Maîtriser le routage IP et la gestion de congestion
 * Analyser les performances réseau avec FlowMonitor et Wireshark
 * Observer les différences entre les protocoles et les stratégies de gestion de buffer
+* Lien point-à-point entre deux nœuds.
+n0 -------- n1
+   10.1.1.0
+Deux nœuds (NodeContainer) reliés par un lien point-à-point (PointToPointHelper).
+Chaque nœud a une interface réseau avec une IP attribuée dans le réseau 10.1.1.0/24.
+Simuler une communication UDP simple entre deux nœuds : n0 envoie un message à n1.
+Visualiser le fonctionnement de NS-3, l’installation des piles réseau, et la configuration d’un client/serveur UDP.
+
 
 ## Installation et configuration
 
