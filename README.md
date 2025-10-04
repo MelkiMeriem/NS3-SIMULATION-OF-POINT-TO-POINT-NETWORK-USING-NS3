@@ -15,13 +15,6 @@
 * Maîtriser le routage IP et la gestion de congestion
 * Analyser les performances réseau avec FlowMonitor et Wireshark
 * Observer les différences entre les protocoles et les stratégies de gestion de buffer
-* Lien point-à-point entre deux nœuds.
-n0 -------- n1
-   10.1.1.0
-Deux nœuds (NodeContainer) reliés par un lien point-à-point (PointToPointHelper).
-Chaque nœud a une interface réseau avec une IP attribuée dans le réseau 10.1.1.0/24.
-Simuler une communication UDP simple entre deux nœuds : n0 envoie un message à n1.
-Visualiser le fonctionnement de NS-3, l’installation des piles réseau, et la configuration d’un client/serveur UDP.
 
 
 ## Installation et configuration
@@ -77,6 +70,14 @@ cd ~/Documents/ns-allinone-3.45/ns-3.45
 * Ipv4AddressHelper: Assigne les adresses IP sur le lien.
 * UdpEchoServerHelper et UdpEchoClientHelper: Créent un serveur et un client UDP.
 * Simulator: Gère le temps et l'exécution de la simulation.
+* Lien point-à-point entre deux nœuds.
+n0 -------- n1
+   10.1.1.0
+Deux nœuds (NodeContainer) reliés par un lien point-à-point (PointToPointHelper).
+Chaque nœud a une interface réseau avec une IP attribuée dans le réseau 10.1.1.0/24.
+Simuler une communication UDP simple entre deux nœuds : n0 envoie un message à n1.
+Visualiser le fonctionnement de NS-3, l’installation des piles réseau, et la configuration d’un client/serveur UDP.
+
 
 **Commande**:
 
@@ -91,6 +92,7 @@ cd ~/Documents/ns-allinone-3.45/ns-3.45
 
 **But**: Échange UDP bidirectionnel entre deux nœuds.
 **Différence avec `first.cc`**: Trafic bidirectionnel, chaque nœud est client et serveur.
+Simuler une communication UDP bidirectionnelle entre deux nœuds. Contrairement à first.cc qui envoie un seul paquet dans une direction (client → serveur), ici chaque nœud agit à la fois comme serveur et client, permettant l’échange de paquets dans les deux sens.
 
 **Commande**:
 
@@ -101,6 +103,7 @@ cd ~/Documents/ns-allinone-3.45/ns-3.45
 ### 2. Topologie linéaire (`part2_linear.cc`)
 
 **But**: Trois nœuds connectés linéairement pour étudier le passage de paquets via un nœud intermédiaire.
+Simuler une topologie linéaire de trois nœuds (n0, n1, n2) pour étudier le passage de paquets UDP à travers un nœud intermédiaire. Cela permet de comprendre comment fonctionne le routage IP sur plusieurs liens.
 
 **Commande**:
 
@@ -111,7 +114,38 @@ cd ~/Documents/ns-allinone-3.45/ns-3.45
 ### 3. Routage IP (`part3_routing.cc`)
 
 **But**: Ajouter le routage global IP pour permettre aux paquets de traverser plusieurs nœuds automatiquement.
+part2_linear.cc
 
+Topologie : 3 nœuds connectés linéairement :
+
+n0 --- n1 --- n2
+
+
+Adresses IP : chaque lien a sa propre adresse (ex. 10.1.1.0 pour n0-n1, 10.1.2.0 pour n1-n2)
+
+Routage : manuel
+
+Le code crée explicitement des clients et serveurs UDP sur chaque nœud et indique quelle adresse IP envoyer.
+
+Les paquets passent du nœud 0 au nœud 2 via nœud 1, mais c’est le code qui définit exactement les adresses à utiliser.
+
+But : comprendre la communication linéaire et comment configurer des adresses IP sur chaque lien.
+
+part3_routing.cc
+
+Topologie : la même 3 nœuds linéaires
+
+Adresses IP : chaque lien a sa propre adresse, comme dans part2
+
+Routage : automatique
+
+On utilise Ipv4GlobalRoutingHelper::PopulateRoutingTables();
+
+NS-3 calcule automatiquement les routes pour chaque nœud
+
+Le client n’a pas besoin de connaître l’adresse intermédiaire du nœud 1, il envoie simplement au serveur, et les paquets traversent n1 automatiquement.
+
+But : simuler le routage réel d’un réseau avec plusieurs nœuds sans config manuelle pour chaque flux
 **Commande**:
 
 ```bash
@@ -120,7 +154,7 @@ cd ~/Documents/ns-allinone-3.45/ns-3.45
 
 ### 4. Communication TCP (`part4_tcp.cc`)
 
-**But**: Simuler TCP fiable entre deux nœuds, mesurer débit et pertes.
+**But**: Simuler une communication TCP fiable entre deux nœuds et mesurer la performance du protocole (débit, pertes). Contrairement à UDP, TCP est orienté connexion et garantit la livraison des paquets.
 
 **Commande**:
 
@@ -130,8 +164,11 @@ cd ~/Documents/ns-allinone-3.45/ns-3.45
 
 ### 5. Gestion de buffer (`part5_buffer.cc`)
 
-**But**: Comparer DropTail et RED sur un lien goulot, observer la congestion et l’équité.
+**But**: Cette partie du TP vise à comparer deux politiques de gestion de files d’attente dans les routeurs pour gérer la congestion :
 
+DropTail : La file d’attente classique où les paquets sont simplement rejetés quand la queue est pleine.
+
+RED (Random Early Detection) : Une file d’attente intelligente qui commence à supprimer aléatoirement les paquets avant que la queue ne soit pleine pour éviter la congestion et améliorer l’équité entre flux.
 **Commandes**:
 
 ```bash
