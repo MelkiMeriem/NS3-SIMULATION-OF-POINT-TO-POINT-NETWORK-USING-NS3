@@ -96,6 +96,8 @@ Deux nœuds (NodeContainer) reliés par un lien point-à-point (PointToPointHelp
 ./ns3 run "examples/tutorial/first.cc"
 ./ns3 run "examples/tutorial/first.py"
 ```
+![Description de l'image](./images/firstcc.png)
+![Description de l'image](./images/firstpy.png)
 
 ---
 
