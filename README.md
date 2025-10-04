@@ -1,16 +1,4 @@
-# TP COMPLET - PROTOCOLES RÉSEAUX MOBILES
-
-## Informations générales
-
-* **Université**: Université de Carthage - INSAT
-* **Niveau**: RT4
-* **Enseignante**: Dr Mériem Afif
-* **Année**: 2025/2026
-* **Sujet**: Simulation réseau avec NS-3
-
----
-
-## Objectifs du TP
+## Objectifs :
 
 * Installer et configurer l'environnement NS-3
 * Comprendre et simuler les protocoles UDP et TCP
