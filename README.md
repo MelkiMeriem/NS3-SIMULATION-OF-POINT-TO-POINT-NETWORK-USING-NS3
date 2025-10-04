@@ -180,7 +180,7 @@ n0 --- n1 --- n2
 ```bash
 ./ns3 run "scratch/part3_routing"
 ```
-![Description de l'image](./images/Capture d’écran du 2025-10-04 16-07-00.png)
+![Description de l'image](./images/PART3.png)
 
 ---
 
@@ -195,7 +195,7 @@ Simuler une communication TCP fiable entre deux nœuds et mesurer la performance
 ```bash
 ./ns3 run "scratch/part4_tcp"
 ```
-![Description de l'image](./images/Capture d’écran du 2025-10-04 16-07-00.png)
+![Description de l'image](./images/PART4.png)
 
 ---
 
@@ -221,13 +221,14 @@ Une file d'attente intelligente qui commence à supprimer aléatoirement les paq
 # Test DropTail
 ./ns3 run "scratch/part5_buffer" -- --queueType=DropTail
 
-![Description de l'image](./images/Capture d’écran du 2025-10-04 16-07-00.png)
-
-
+```
+![Description de l'image](./images/DropTail.png)
+```bash
 # Test RED
 ./ns3 run "scratch/part5_buffer" -- --queueType=Red
 ```
-![Description de l'image](./images/Capture d’écran du 2025-10-04 16-07-00.png)
+![Description de l'image](./images/Red.png)
+
 
 
 ---
