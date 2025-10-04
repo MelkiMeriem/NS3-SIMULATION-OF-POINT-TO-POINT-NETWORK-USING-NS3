@@ -106,7 +106,7 @@ Trafic bidirectionnel, chaque nœud est client et serveur. Simuler une communica
 ```bash
 ./ns3 run "scratch/part1_bidirectional"
 ```
-![Description de l'image](./images/Capture d’écran du 2025-10-04 16-07-00.png)
+![Description de l'image](./images/PART1.png)
 
 ---
 
@@ -138,7 +138,7 @@ Simuler une topologie linéaire de trois nœuds (n0, n1, n2) pour étudier le pa
 ```bash
 ./ns3 run "scratch/part2_linear"
 ```
-![Description de l'image](./images/Capture d’écran du 2025-10-04 16-07-00.png)
+![Description de l'image](./images/PART2.png)
 
 ---
 
