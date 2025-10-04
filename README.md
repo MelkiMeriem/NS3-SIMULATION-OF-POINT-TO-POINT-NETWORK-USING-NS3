@@ -8,6 +8,8 @@
 * **Année**: 2025/2026
 * **Sujet**: Simulation réseau avec NS-3
 
+---
+
 ## Objectifs du TP
 
 * Installer et configurer l'environnement NS-3
@@ -16,6 +18,7 @@
 * Analyser les performances réseau avec FlowMonitor et Wireshark
 * Observer les différences entre les protocoles et les stratégies de gestion de buffer
 
+---
 
 ## Installation et configuration
 
@@ -57,119 +60,168 @@ cd ~/Documents/ns-allinone-3.45/ns-3.45
 ./ns3 run first.py
 ```
 
+---
+
 ## Partie A : Exemple de simulation de base
 
-### `first.cc` / `first.py`
+### first.cc / first.py
 
-**But**: Simuler une communication UDP simple entre deux nœuds reliés par un lien point-à-point.
-**Explication détaillée**:
+#### But
 
-* NodeContainer: Crée les nœuds du réseau.
-* PointToPointHelper: Définit le lien avec un débit et un délai spécifique.
-* InternetStackHelper: Installe la pile IP sur les nœuds.
-* Ipv4AddressHelper: Assigne les adresses IP sur le lien.
-* UdpEchoServerHelper et UdpEchoClientHelper: Créent un serveur et un client UDP.
-* Simulator: Gère le temps et l'exécution de la simulation.
-* Lien point-à-point entre deux nœuds.
+Simuler une communication UDP simple entre deux nœuds reliés par un lien point-à-point.
+
+#### Topologie
+
+```
 n0 -------- n1
    10.1.1.0
-Deux nœuds (NodeContainer) reliés par un lien point-à-point (PointToPointHelper).
-Chaque nœud a une interface réseau avec une IP attribuée dans le réseau 10.1.1.0/24.
-Simuler une communication UDP simple entre deux nœuds : n0 envoie un message à n1.
-Visualiser le fonctionnement de NS-3, l’installation des piles réseau, et la configuration d’un client/serveur UDP.
+```
 
+#### Composants principaux
 
-**Commande**:
+* **NodeContainer**: Crée les nœuds du réseau
+* **PointToPointHelper**: Définit le lien avec un débit et un délai spécifique
+* **InternetStackHelper**: Installe la pile IP sur les nœuds
+* **Ipv4AddressHelper**: Assigne les adresses IP sur le lien
+* **UdpEchoServerHelper et UdpEchoClientHelper**: Créent un serveur et un client UDP
+* **Simulator**: Gère le temps et l'exécution de la simulation
+
+#### Description
+
+Deux nœuds (NodeContainer) reliés par un lien point-à-point (PointToPointHelper). Chaque nœud a une interface réseau avec une IP attribuée dans le réseau 10.1.1.0/24. Simuler une communication UDP simple entre deux nœuds : n0 envoie un message à n1. Visualiser le fonctionnement de NS-3, l'installation des piles réseau, et la configuration d'un client/serveur UDP.
+
+#### Commande
 
 ```bash
 ./ns3 run "examples/tutorial/first.cc"
 ./ns3 run "examples/tutorial/first.py"
 ```
 
+---
+
 ## Partie B : Simulations réseau avancées
 
-### 1. Communication bidirectionnelle UDP (`part1_bidirectional.cc`)
+### 1. Communication bidirectionnelle UDP (part1_bidirectional.cc)
 
-**But**: Échange UDP bidirectionnel entre deux nœuds.
-**Différence avec `first.cc`**: Trafic bidirectionnel, chaque nœud est client et serveur.
-Simuler une communication UDP bidirectionnelle entre deux nœuds. Contrairement à first.cc qui envoie un seul paquet dans une direction (client → serveur), ici chaque nœud agit à la fois comme serveur et client, permettant l’échange de paquets dans les deux sens.
+#### But
 
-**Commande**:
+Échange UDP bidirectionnel entre deux nœuds.
+
+#### Différence avec first.cc
+
+Trafic bidirectionnel, chaque nœud est client et serveur. Simuler une communication UDP bidirectionnelle entre deux nœuds. Contrairement à first.cc qui envoie un seul paquet dans une direction (client → serveur), ici chaque nœud agit à la fois comme serveur et client, permettant l'échange de paquets dans les deux sens.
+
+#### Commande
 
 ```bash
 ./ns3 run "scratch/part1_bidirectional"
 ```
 
-### 2. Topologie linéaire (`part2_linear.cc`)
+---
 
-**But**: Trois nœuds connectés linéairement pour étudier le passage de paquets via un nœud intermédiaire.
+### 2. Topologie linéaire (part2_linear.cc)
+
+#### But
+
+Trois nœuds connectés linéairement pour étudier le passage de paquets via un nœud intermédiaire.
+
+#### Topologie
+
+```
+n0 --- n1 --- n2
+```
+
+#### Description
+
 Simuler une topologie linéaire de trois nœuds (n0, n1, n2) pour étudier le passage de paquets UDP à travers un nœud intermédiaire. Cela permet de comprendre comment fonctionne le routage IP sur plusieurs liens.
 
-**Commande**:
+#### Caractéristiques
+
+* **Adresses IP**: Chaque lien a sa propre adresse (ex. 10.1.1.0 pour n0-n1, 10.1.2.0 pour n1-n2)
+* **Routage**: Manuel
+* **Fonctionnement**: Le code crée explicitement des clients et serveurs UDP sur chaque nœud et indique quelle adresse IP envoyer. Les paquets passent du nœud 0 au nœud 2 via nœud 1, mais c'est le code qui définit exactement les adresses à utiliser.
+* **Objectif**: Comprendre la communication linéaire et comment configurer des adresses IP sur chaque lien.
+
+#### Commande
 
 ```bash
 ./ns3 run "scratch/part2_linear"
 ```
 
-### 3. Routage IP (`part3_routing.cc`)
+---
 
-**But**: Ajouter le routage global IP pour permettre aux paquets de traverser plusieurs nœuds automatiquement.
-part2_linear.cc
+### 3. Routage IP (part3_routing.cc)
 
-Topologie : 3 nœuds connectés linéairement :
+#### But
 
+Ajouter le routage global IP pour permettre aux paquets de traverser plusieurs nœuds automatiquement.
+
+#### Topologie
+
+```
 n0 --- n1 --- n2
+```
 
+#### Comparaison avec part2_linear.cc
 
-Adresses IP : chaque lien a sa propre adresse (ex. 10.1.1.0 pour n0-n1, 10.1.2.0 pour n1-n2)
+**part2_linear.cc**
 
-Routage : manuel
+* Topologie : 3 nœuds connectés linéairement
+* Adresses IP : chaque lien a sa propre adresse (ex. 10.1.1.0 pour n0-n1, 10.1.2.0 pour n1-n2)
+* Routage : manuel
+* Le code crée explicitement des clients et serveurs UDP sur chaque nœud et indique quelle adresse IP envoyer
+* Les paquets passent du nœud 0 au nœud 2 via nœud 1, mais c'est le code qui définit exactement les adresses à utiliser
+* But : comprendre la communication linéaire et comment configurer des adresses IP sur chaque lien
 
-Le code crée explicitement des clients et serveurs UDP sur chaque nœud et indique quelle adresse IP envoyer.
+**part3_routing.cc**
 
-Les paquets passent du nœud 0 au nœud 2 via nœud 1, mais c’est le code qui définit exactement les adresses à utiliser.
+* Topologie : la même 3 nœuds linéaires
+* Adresses IP : chaque lien a sa propre adresse, comme dans part2
+* Routage : automatique
+* On utilise Ipv4GlobalRoutingHelper::PopulateRoutingTables();
+* NS-3 calcule automatiquement les routes pour chaque nœud
+* Le client n'a pas besoin de connaître l'adresse intermédiaire du nœud 1, il envoie simplement au serveur, et les paquets traversent n1 automatiquement
+* But : simuler le routage réel d'un réseau avec plusieurs nœuds sans config manuelle pour chaque flux
 
-But : comprendre la communication linéaire et comment configurer des adresses IP sur chaque lien.
-
-part3_routing.cc
-
-Topologie : la même 3 nœuds linéaires
-
-Adresses IP : chaque lien a sa propre adresse, comme dans part2
-
-Routage : automatique
-
-On utilise Ipv4GlobalRoutingHelper::PopulateRoutingTables();
-
-NS-3 calcule automatiquement les routes pour chaque nœud
-
-Le client n’a pas besoin de connaître l’adresse intermédiaire du nœud 1, il envoie simplement au serveur, et les paquets traversent n1 automatiquement.
-
-But : simuler le routage réel d’un réseau avec plusieurs nœuds sans config manuelle pour chaque flux
-**Commande**:
+#### Commande
 
 ```bash
 ./ns3 run "scratch/part3_routing"
 ```
 
-### 4. Communication TCP (`part4_tcp.cc`)
+---
 
-**But**: Simuler une communication TCP fiable entre deux nœuds et mesurer la performance du protocole (débit, pertes). Contrairement à UDP, TCP est orienté connexion et garantit la livraison des paquets.
+### 4. Communication TCP (part4_tcp.cc)
 
-**Commande**:
+#### But
+
+Simuler une communication TCP fiable entre deux nœuds et mesurer la performance du protocole (débit, pertes). Contrairement à UDP, TCP est orienté connexion et garantit la livraison des paquets.
+
+#### Commande
 
 ```bash
 ./ns3 run "scratch/part4_tcp"
 ```
 
-### 5. Gestion de buffer (`part5_buffer.cc`)
+---
 
-**But**: Cette partie du TP vise à comparer deux politiques de gestion de files d’attente dans les routeurs pour gérer la congestion :
+### 5. Gestion de buffer (part5_buffer.cc)
 
-DropTail : La file d’attente classique où les paquets sont simplement rejetés quand la queue est pleine.
+#### But
 
-RED (Random Early Detection) : Une file d’attente intelligente qui commence à supprimer aléatoirement les paquets avant que la queue ne soit pleine pour éviter la congestion et améliorer l’équité entre flux.
-**Commandes**:
+Cette partie du TP vise à comparer deux politiques de gestion de files d'attente dans les routeurs pour gérer la congestion.
+
+#### Politiques de gestion
+
+**DropTail**
+
+La file d'attente classique où les paquets sont simplement rejetés quand la queue est pleine.
+
+**RED (Random Early Detection)**
+
+Une file d'attente intelligente qui commence à supprimer aléatoirement les paquets avant que la queue ne soit pleine pour éviter la congestion et améliorer l'équité entre flux.
+
+#### Commandes
 
 ```bash
 # Test DropTail
@@ -179,17 +231,21 @@ RED (Random Early Detection) : Une file d’attente intelligente qui commence à
 ./ns3 run "scratch/part5_buffer" -- --queueType=Red
 ```
 
+---
+
 ## Analyse des résultats
 
-* UDP vs TCP: UDP est non fiable, TCP s’adapte à la congestion et garantit la livraison.
-* Routage IP: Les tables de routage permettent aux paquets de traverser plusieurs nœuds automatiquement.
-* Congestion et gestion de buffer: RED améliore l’équité et réduit les pertes comparé à DropTail.
-* Outils d’analyse: Wireshark pour visualiser le trafic, FlowMonitor pour statistiques détaillées.
+* **UDP vs TCP**: UDP est non fiable, TCP s'adapte à la congestion et garantit la livraison
+* **Routage IP**: Les tables de routage permettent aux paquets de traverser plusieurs nœuds automatiquement
+* **Congestion et gestion de buffer**: RED améliore l'équité et réduit les pertes comparé à DropTail
+* **Outils d'analyse**: Wireshark pour visualiser le trafic, FlowMonitor pour statistiques détaillées
+
+---
 
 ## Résumé des acquis
 
-* Maîtrise de NS-3 et simulation réseau.
-* Programmation C++ pour simulation des réseaux.
-* Analyse des protocoles UDP et TCP.
-* Compréhension du routage IP et de la gestion de congestion.
-* Utilisation d’outils professionnels pour l’analyse réseau (Wireshark, FlowMonitor).
+* Maîtrise de NS-3 et simulation réseau
+* Programmation C++ pour simulation des réseaux
+* Analyse des protocoles UDP et TCP
+* Compréhension du routage IP et de la gestion de congestion
+* Utilisation d'outils professionnels pour l'analyse réseau (Wireshark, FlowMonitor)
