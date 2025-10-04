@@ -64,12 +64,42 @@ Objectif : apprendre à configurer des nœuds, des interfaces IP et une communic
 ## PARTIE B: SIMULATIONS RÉSEAU
 
 ### QUESTION 1: COMMUNICATION BIDIRECTIONNELLE UDP
+Objectif : Aller plus loin dans la simulation réseau.
 
+Topologie : Toujours 2 nœuds point-à-point, mais avec communication bidirectionnelle.
+
+Communication :
+
+n0 envoie vers n1 (UDP)
+
+n1 envoie vers n0 (UDP)
+→ Ce scénario simule un échange de données dans les deux sens.
+
+Complexité :
+
+Deux serveurs UDP (un sur chaque nœud)
+
+Deux clients UDP (un sur chaque nœud)
+
+Paramètres différents pour les paquets (taille, heure de départ)
+
+Capture PCAP activée pour analyser le trafic réseau
+
+But pédagogique :
+
+Comprendre la communication bidirectionnelle
+
+Observer comment les paquets circulent dans les deux sens
+
+Débuter l’analyse du réseau avec des captures (Wireshark ou PCAP)
+
+Préparer les bases pour les simulations plus complexes (linéaire, routage, TCP)
 **Code:** scratch/part1_bidirectional.cc
 
 ```cpp
 // code complet ici...
 ```
+
 
 **Exécution:**
 
