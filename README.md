@@ -1,202 +1,90 @@
+# TP COMPLET - PROTOCOLES RÉSEAUX MOBILES
 
-## OBJECTIFS 
+## Informations générales
+- Université: Université de Carthage - INSAT  
+- Niveau: RT4  
+- Enseignante: Dr Mériem Afif  
+- Année: 2025/2026  
+- Sujet: Simulation réseau avec NS-3
 
-L’objectif de ce TP est de se familiariser avec NS-3, un simulateur réseau utilisé pour étudier le comportement de différents protocoles réseau dans des topologies variées. Les points principaux abordés sont :
+## Objectifs du TP
+- Installer et configurer l'environnement NS-3  
+- Comprendre et simuler les protocoles UDP et TCP  
+- Maîtriser le routage IP et la gestion de congestion  
+- Analyser les performances réseau avec FlowMonitor et Wireshark  
 
-Communication UDP et TCP
-
-Routage IP
-
-Gestion de congestion et des files d’attente
-
-Analyse des performances réseau avec FlowMonitor et Wireshark
----
-
-## INSTALLATION ET CONFIGURATION
-
-### ÉTAPE 1: Installation des dépendances système
-
-```bash
-sudo apt update
+## Installation et configuration
+### Installation des dépendances système
+sudo apt update  
 sudo apt install g++ python3 python3-venv python3-pip cmake ninja-build git gir1.2-goocanvas-2.0 python3-gi python3-gi-cairo python3-pygraphviz gir1.2-gtk-3.0 ipython3 tcpdump wireshark sqlite3 libsqlite3-dev qtbase5-dev qtchooser qt5-qmake qtbase5-dev-tools openmpi-bin openmpi-common openmpi-doc libopenmpi-dev doxygen graphviz graphviz-dev imagemagick python3-sphinx dia texlive dvipng latexmk texlive-extra-utils texlive-latex-extra texlive-font-utils libeigen3-dev gsl-bin libgsl-dev libgslcblas0 libxml2 libxml2-dev libgtk-3-dev lxc-utils lxc-templates vtun uml-utilities ebtables bridge-utils libboost-all-dev ccache
-```
 
-### ÉTAPE 2: Configuration Python
-
-```bash
-mkdir -p ~/.config/pip
-echo "[global]" >> ~/.config/pip/pip.conf
-echo "break-system-packages = true" >> ~/.config/pip/pip.conf
+### Configuration Python
+mkdir -p ~/.config/pip  
+echo "[global]" >> ~/.config/pip/pip.conf  
+echo "break-system-packages = true" >> ~/.config/pip/pip.conf  
 pip3 install cppyy cppyy-backend pygraphviz kiwi
-```
 
-### ÉTAPE 3: Installation de NS-3
-
-```bash
-cd ~/Documents/ns-allinone-3.45/ns-3.45
-./ns3 configure --enable-python-bindings --enable-examples --enable-tests --disable-modules=netsimulyzer
+### Installation de NS-3
+cd ~/Documents/ns-allinone-3.45/ns-3.45  
+./ns3 configure --enable-python-bindings --enable-examples --enable-tests --disable-modules=netsimulyzer  
 ./ns3 build
-```
 
-### ÉTAPE 4: Test de l'installation
-Lien point-à-point entre deux nœuds.
-n0 -------- n1
-   10.1.1.0
-Deux nœuds (NodeContainer) reliés par un lien point-à-point (PointToPointHelper).
-Chaque nœud a une interface réseau avec une IP attribuée dans le réseau 10.1.1.0/24.
-Simuler une communication UDP simple entre deux nœuds : n0 envoie un message à n1.
-Visualiser le fonctionnement de NS-3, l’installation des piles réseau, et la configuration d’un client/serveur UDP.
-
-```bash
-./ns3 run first
+### Test de l'installation
+./ns3 run first  
 ./ns3 run first.py
-```
-<p align="center">
-  <img src="./images/firstcc.png" alt="Ma photo" width="400"/>
-</p>
-<p align="center">
-  <img src="./images/firstpy.png" alt="Ma photo" width="400"/>
-</p>
 
+## Partie A : Exemple de simulation de base
 
-Objectif : apprendre à configurer des nœuds, des interfaces IP et une communication UDP simple.
+### first.cc / first.py
+**But:** Simuler une communication UDP simple entre deux nœuds reliés par un lien point-à-point. La simulation crée deux nœuds, installe la pile TCP/IP, configure un serveur UDP sur le nœud 1 et un client UDP sur le nœud 0. Le client envoie un seul paquet pour tester la communication.  
+**Commande:** ./ns3 run "examples/tutorial/first.cc" ou ./ns3 run "examples/tutorial/first.py"  
+**Explication détaillée:**  
+- Création de deux nœuds avec `NodeContainer`.  
+- Configuration d’un lien point-à-point avec débit 5 Mbps et délai 2 ms.  
+- Installation de la pile Internet (`InternetStackHelper`).  
+- Attribution des adresses IP avec `Ipv4AddressHelper`.  
+- Configuration du serveur UDP avec `UdpEchoServerHelper` et démarrage à 1 seconde.  
+- Configuration du client UDP avec `UdpEchoClientHelper`, envoi d’un paquet de 1024 octets à 2 secondes.  
+- Lancement de la simulation avec `Simulator::Run()` et destruction avec `Simulator::Destroy()`.
 
-## PARTIE B: SIMULATIONS RÉSEAU
+## Partie B : Simulations réseau avancées
 
-### QUESTION 1: COMMUNICATION BIDIRECTIONNELLE UDP
-Objectif : Aller plus loin dans la simulation réseau.
+### 1. Communication bidirectionnelle UDP (part1_bidirectional.cc)
+**But:** Simuler un échange UDP bidirectionnel entre deux nœuds. Deux serveurs et deux clients sont configurés pour envoyer et recevoir des paquets à différents intervalles. Permet l’observation du trafic réseau via les fichiers PCAP générés.  
+**Commande:** ./ns3 run "scratch/part1_bidirectional"  
+**Explication:** Permet d’étudier comment UDP peut échanger des données dans les deux sens simultanément, et de visualiser le trafic réseau.
 
-Topologie : Toujours 2 nœuds point-à-point, mais avec communication bidirectionnelle.
+### 2. Topologie linéaire (part2_linear.cc)
+**But:** Créer trois nœuds connectés linéairement (n0-n1-n2) et simuler le passage de paquets UDP via le nœud intermédiaire n1. Chaque lien a une adresse IP différente pour comprendre le routage simple.  
+**Commande:** ./ns3 run "scratch/part2_linear"  
+**Explication:** Étudie la propagation des paquets à travers un réseau à plusieurs nœuds et la configuration IP par lien.
 
-Communication :
+### 3. Routage IP (part3_routing.cc)
+**But:** Ajouter le routage global IP avec `Ipv4GlobalRoutingHelper` pour que les paquets traversent automatiquement plusieurs nœuds. Permet de comprendre l’impact du routage dynamique sur la communication UDP.  
+**Commande:** ./ns3 run "scratch/part3_routing"  
+**Explication:** Montre l’importance des tables de routage dans les réseaux multi-nœuds.
 
-n0 envoie vers n1 (UDP)
+### 4. Communication TCP (part4_tcp.cc)
+**But:** Simuler une communication TCP fiable entre deux nœuds. Installer un serveur TCP et un client TCP, mesurer le débit et les pertes avec FlowMonitor, et comparer la fiabilité avec UDP.  
+**Commande:** ./ns3 run "scratch/part4_tcp"  
+**Explication:** TCP garantit la livraison des paquets et ajuste le débit selon la congestion, contrairement à UDP.
 
-n1 envoie vers n0 (UDP)
-→ Ce scénario simule un échange de données dans les deux sens.
+### 5. Gestion de buffer (part5_buffer.cc)
+**But:** Comparer DropTail et RED sur un lien goulot avec plusieurs sources TCP. Étudier l’effet de la congestion sur le débit, les pertes et l’équité des flux TCP. Analyse des résultats avec FlowMonitor et Wireshark.  
+**Commandes:**  
+./ns3 run "scratch/part5_buffer" -- --queueType=DropTail  
+./ns3 run "scratch/part5_buffer" -- --queueType=Red  
+**Explication:** RED permet de limiter la congestion et d’améliorer l’équité entre les flux, alors que DropTail peut saturer le lien.
 
-Complexité :
+## Analyse des résultats
+- **UDP vs TCP:** UDP est simple et non fiable, TCP s’adapte à la congestion et garantit la livraison.  
+- **Routage IP:** Les tables de routage permettent aux paquets de traverser plusieurs nœuds automatiquement.  
+- **Congestion et gestion de buffer:** RED améliore l’équité et réduit les pertes comparé à DropTail.  
+- **Outils d’analyse:** Wireshark pour visualiser le trafic, FlowMonitor pour statistiques détaillées par flux.
 
-Deux serveurs UDP (un sur chaque nœud)
-
-Deux clients UDP (un sur chaque nœud)
-
-Paramètres différents pour les paquets (taille, heure de départ)
-
-Capture PCAP activée pour analyser le trafic réseau
-
-But pédagogique :
-
-Comprendre la communication bidirectionnelle
-
-Observer comment les paquets circulent dans les deux sens
-
-Débuter l’analyse du réseau avec des captures (Wireshark ou PCAP)
-
-Préparer les bases pour les simulations plus complexes (linéaire, routage, TCP)
-**Code:** scratch/part1_bidirectional.cc
-
-```cpp
-// code complet ici...
-```
-
-
-**Exécution:**
-
-```bash
-./ns3 run "scratch/part1_bidirectional"
-```
-
-### QUESTION 2: TOPOLOGIE LINÉAIRE
-
-**Code:** scratch/part2_linear.cc
-
-```cpp
-// code complet ici...
-```
-
-**Exécution:**
-
-```bash
-./ns3 run "scratch/part2_linear"
-```
-
-### QUESTION 3: ROUTAGE IP
-
-**Code:** scratch/part3_routing.cc
-
-```cpp
-// code complet ici...
-```
-
-**Exécution:**
-
-```bash
-./ns3 run "scratch/part3_routing"
-```
-
-### QUESTION 4: COMMUNICATION TCP
-
-**Code:** scratch/part4_tcp.cc
-
-```cpp
-// code complet ici...
-```
-
-**Exécution:**
-
-```bash
-./ns3 run "scratch/part4_tcp"
-```
-
-### QUESTION 5: GESTION DE BUFFER (DROPTAIL vs RED)
-
-**Code:** scratch/part5_buffer.cc
-
-```cpp
-// code complet ici...
-```
-
-**Exécution:**
-
-```bash
-# Test DropTail
-./ns3 run "scratch/part5_buffer" -- --queueType=DropTail
-
-# Test RED
-./ns3 run "scratch/part5_buffer" -- --queueType=Red
-```
-
-## ANALYSE DES RÉSULTATS
-
-**Comparaison DropTail vs RED:**
-
-| Métrique         | DropTail   | RED        | Observation                  |
-| ---------------- | ---------- | ---------- | ---------------------------- |
-| Débit Total      | ~3.14 Mbps | ~2.98 Mbps | RED légèrement inférieur     |
-| Paquets Perdus   | ~64        | ~55        | RED réduit les pertes de 14% |
-| Utilisation Lien | 104%       | 99%        | RED évite la sursaturation   |
-| Équité           | Moyenne    | Bonne      | RED plus équitable           |
-
-## CONCLUSIONS
-
-* UDP vs TCP: UDP simple vs TCP adaptatif
-* Routage: Fonctionne automatiquement avec tables de routage
-* Congestion: Phénomène réel observé à 104% d'utilisation
-* Gestion Buffer: RED améliore l'équité et réduit les pertes
-
-## OUTILS D'ANALYSE
-
-* Wireshark: capture des paquets
-* FlowMonitor: statistiques détaillées par flux
-* Fichiers PCAP: capture du trafic réseau
-
-## RÉSUMÉ DES ACQUIS
-
-* Maîtrise de NS-3 et simulation réseau
-* Programmation C++ pour réseaux
-* Analyse des protocoles UDP/TCP
-* Routage IP et gestion de congestion
-* Utilisation d'outils professionnels
-
-TP COMPLET TERMINÉ
+## Résumé des acquis
+- Maîtrise de NS-3 et simulation réseau.  
+- Programmation C++ et Python pour la simulation des réseaux.  
+- Analyse des protocoles UDP et TCP.  
+- Compréhension du routage IP et de la gestion de congestion.  
+- Utilisation d’outils professionnels pour l’analyse réseau (Wireshark, FlowMonitor).  
