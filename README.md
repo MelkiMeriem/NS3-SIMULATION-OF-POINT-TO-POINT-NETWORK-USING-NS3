@@ -239,7 +239,10 @@ Exemple de sortie :
 RxDrop at 1.13696
 RxDrop at 2.53382
 
-
+```bash
+./ns3 run "examples/tutorial/fifth.cc"
+```
+![Description de l'image](./images/trace.png)
 #### Commande
 
 ```bash
