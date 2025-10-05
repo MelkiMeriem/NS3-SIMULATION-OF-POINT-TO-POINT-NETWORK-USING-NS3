@@ -242,7 +242,7 @@ RxDrop at 2.53382
 ```bash
 ./ns3 run "examples/tutorial/fifth.cc"
 ```
-![Description de l'image](./images/trace.png)
+![Description de l'image](./images/Trace.png)
 #### Commande
 
 ```bash
