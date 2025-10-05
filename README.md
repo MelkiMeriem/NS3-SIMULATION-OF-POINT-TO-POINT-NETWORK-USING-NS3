@@ -195,10 +195,50 @@ n0 --- n1 --- n2
 ---
 
 ### 4. Communication TCP (part4_tcp.cc)
-
 #### But
 
 Simuler une communication TCP fiable entre deux nœuds et mesurer la performance du protocole (débit, pertes). Contrairement à UDP, TCP est orienté connexion et garantit la livraison des paquets.
+
+#### Contexte
+
+Dans les parties précédentes, nous avons simulé des échanges UDP entre nœuds (part1, part2, part3). UDP est simple : pas de contrôle de flux, pas de congestion.
+Maintenant, le script fifth.cc utilise TCP. TCP est différent de UDP :
+ * Il assure la fiabilité (retransmission des paquets perdus).
+ * Il gère la congestion via une fenêtre de congestion (congestion window).
+ * Les paquets peuvent être droppés si le lien est saturé.
+#### Que fait le script fifth.cc
+
+* Il crée 2 nœuds reliés par un lien point-à-point.
+* Le nœud 0 envoie des données TCP au nœud 1.
+* Un callback (CwndChange) trace l’évolution de la fenêtre de congestion sur le terminal.
+* Un autre callback (RxDrop) trace les paquets perdus sur le lien.
+
+####  Analyse du journal
+
+#### Fenêtre de congestion
+Exemple de sortie :
+1.00419 536
+1.0093 1072
+1.01528 1608
+...
+- Le **premier nombre** : temps en secondes depuis le début de la simulation.
+- Le **second nombre** : taille de la fenêtre de congestion (en octets) au moment donné.
+- Interprétation :
+  - La fenêtre **augmente progressivement** au début (*phase de slow start*).
+  - TCP envoie de plus en plus de paquets tant que tout est reçu correctement.
+  - Quand un paquet est perdu, la fenêtre se réduit (TCP ajuste sa vitesse pour éviter la congestion).
+  - Au début d’une connexion TCP, la congestion du réseau est inconnue.
+
+TCP commence avec une petite fenêtre (souvent 1 ou 2 paquets) pour éviter de saturer le lien.
+Chaque fois qu’un acknowledgment (ACK) est reçu sans perte :
+TCP augmente la fenêtre de congestion.
+Cela permet d’envoyer plus de paquets simultanément.
+
+### Paquets perdus
+Exemple de sortie :
+RxDrop at 1.13696
+RxDrop at 2.53382
+
 
 #### Commande
 
