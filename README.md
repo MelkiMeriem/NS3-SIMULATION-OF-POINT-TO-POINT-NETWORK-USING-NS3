@@ -108,10 +108,12 @@ Trafic bidirectionnel, chaque nœud est client et serveur. Simuler une communica
 ```
 ![Description de l'image](./images/PART1.png)
 
+
+Contient tous les paquets envoyés ou reçus par la première interface du nœud 0
 ```bash
 wireshark part1_bidirectional-0-0.pcap
 ```
-
+Contient tous les paquets envoyés ou reçus par la première interface du nœud 1
 ```bash
 wireshark part1_bidirectional-1-0.pcap
 ```
