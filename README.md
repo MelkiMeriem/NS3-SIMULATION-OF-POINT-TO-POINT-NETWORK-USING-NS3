@@ -108,7 +108,15 @@ Trafic bidirectionnel, chaque nœud est client et serveur. Simuler une communica
 ```
 ![Description de l'image](./images/PART1.png)
 
+```bash
+wireshark part1_bidirectional-0-0.pcap
+```
+
+```bash
+wireshark part1_bidirectional-1-0.pcap
+```
 ---
+
 
 ### 2. Topologie linéaire (part2_linear.cc)
 
